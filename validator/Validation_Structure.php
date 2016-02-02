@@ -8,6 +8,15 @@ class Validation_Structure implements Validation_Interface
         return self::$indicator;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_email($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -21,6 +30,15 @@ class Validation_Structure implements Validation_Interface
         return;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_url($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -34,6 +52,15 @@ class Validation_Structure implements Validation_Interface
         return;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_url_query($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -46,16 +73,29 @@ class Validation_Structure implements Validation_Interface
             return false;
         }
 
-        if (isset($var['path'])) unset($var['path']);
-        if (isset($var['query'])) unset($var['query']);
+        if (isset($var['path'])) {
+            unset($var['path']);
+        }
+        if (isset($var['query'])) {
+            unset($var['query']);
+        }
 
-        if (!empty($var)){
+        if (!empty($var)) {
             return false;
         }
 
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '/^[a-zA-Z0-9+&@#\/%?=~_|!:,.;]*[a-zA-Z0-9+&@#\/%=~_|]$/i');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_regex($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -69,67 +109,157 @@ class Validation_Structure implements Validation_Interface
         return;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_hash($key, $input, $setting = null, $param = null)
     {
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([a-fA-F0-0]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_md5($key, $input, $setting = null, $param = null)
     {
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^[0-9A-Fa-f]{32}$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_sha1($key, $input, $setting = null, $param = null)
     {
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^[0-9A-Fa-f]{40}$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_identifier($key, $input, $setting = null, $param = null)
     {
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([0-9_]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_user_name($key, $input, $setting = null, $param = null)
     {
         return Validation_Condition::validate_valid_userName($key, $input, $setting, $param);
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_userName($key, $input, $setting = null, $param = null)
     {
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([a-zA-Z0-9äöüÄÖÜß]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return [[Type]] [[Description]]
+     */
     public static function validate_valid_timestamp($key, $input, $setting = null, $param = null)
     {
         return self::validate_valid_integer($key, $input, $setting, null);
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_alpha($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
             return;
         }
 
-        if (!is_string($input[$key])){
+        if (!is_string($input[$key])) {
             return false;
         }
 
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([a-zA-Z]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_alpha_space($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
             return;
         }
 
-        if (!is_string($input[$key])){
+        if (!is_string($input[$key])) {
             return false;
         }
 
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([a-zA-Z\h]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_integer($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -146,32 +276,59 @@ class Validation_Structure implements Validation_Interface
         return;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_alpha_numeric($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
             return;
         }
 
-        if (!is_string($input[$key])){
+        if (!is_string($input[$key])) {
             return false;
         }
 
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([0-9a-zA-Z]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_alpha_space_numeric($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
             return;
         }
 
-        if (!is_string($input[$key])){
+        if (!is_string($input[$key])) {
             return false;
         }
 
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([0-9a-zA-Z\h]+)$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_valid_json($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key])) {
@@ -180,7 +337,7 @@ class Validation_Structure implements Validation_Interface
 
         $temp = @json_decode($input[$key]);
 
-        if ($temp === null){
+        if ($temp === null) {
             return false;
         }
 

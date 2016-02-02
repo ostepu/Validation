@@ -8,23 +8,41 @@ class Validation_Type implements Validation_Interface
         return self::$indicator;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_is_float($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
             return;
         }
 
-        if (is_float($input[$key])){
+        if (is_float($input[$key])) {
             return;
         }
 
-        if (!is_float((float) $input[$key])){
+        if (!is_float((float) $input[$key])) {
             return false;
         }
 
         return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^\d+\.\d+$%');
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_is_boolean($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -32,19 +50,28 @@ class Validation_Type implements Validation_Interface
         }
 
         $boolean = filter_var($input[$key], FILTER_VALIDATE_BOOLEAN);
-        if ($boolean !== null){
+        if ($boolean !== null) {
             return;
         }
 
         return false;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_is_integer($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
             return;
         }
-        if (is_int($input[$key])){
+        if (is_int($input[$key])) {
             return;
         }
         if (is_string($input[$key]) && !ctype_digit($input[$key])) {
@@ -57,6 +84,15 @@ class Validation_Type implements Validation_Interface
         return;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_is_string($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
@@ -70,6 +106,15 @@ class Validation_Type implements Validation_Interface
         return false;
     }
 
+    /**
+     * [[Description]]
+     * @author Till Uhlig
+     * @param  [[Type]] $key              [[Description]]
+     * @param  [[Type]] $input            [[Description]]
+     * @param  [[Type]] [$setting = null] [[Description]]
+     * @param  [[Type]] [$param = null]   [[Description]]
+     * @return boolean  [[Description]]
+     */
     public static function validate_is_array($key, $input, $setting = null, $param = null)
     {
         if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
