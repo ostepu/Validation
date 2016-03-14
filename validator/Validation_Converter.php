@@ -347,4 +347,24 @@ class Validation_Converter implements Validation_Interface
 
         return array('valid'=>true,'field'=>$key,'value'=>$obj);
     }
+
+    public static function validate_to_timestamp($key, $input, $setting = null, $param = null)
+    {
+        if ($setting['setError']) {
+            return;
+        }
+
+        if (!isset($input[$key])) {
+            return;
+        }
+
+        $val = $input[$key];
+        if (trim($val) == ''){
+            $val = 0;
+        } else {
+            $val = strtotime(str_replace(" - ", " ", $val));
+        }
+        
+        return array('valid'=>true,'field'=>$key,'value'=>$val);
+    }
 }
