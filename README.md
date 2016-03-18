@@ -3,25 +3,108 @@
 ```PHP
 include_once dirname(__FILE__) . '/../Assistants/vendor/Validation/Validation.php';
 
-$postValidation = Validation::open($_POST)
+// ab hier wird ein neuer Regelsatz für $_POST['action'] definiert,
+// wobei das Feld nur die Werte 'SetPassword' und 'SetAccountInfo' haben darf
+// oder nicht existieren darf (sodass es zu 'noAction' wird)
+$val = Validation::open($_POST)
   ->addSet('action',
            array('set_default'=>'noAction',
                  'satisfy_in_list'=>array('noAction', 'SetPassword', 'SetAccountInfo'),
                  'on_error'=>array('type'=>'error',
                                    'text'=>'unbekannte Aktion'))); 
                                    
-$postResults = $postValidation->validate();
+$result = $val->validate(); // liefert die Ergebnismenge
 
-
-if ($postValidation->isValid()){
-    echo $postResults['action'];
+if ($val->isValid()){
+    // $_POST['action'] erfüllt die Regelmenge und kann genutzt werden
+    echo $result['action'];
 } else {
-  $notifications = $postValidation->getNotifications();
+  // wenn die Eingabe nicht validiert werden konnte, können hier die
+  // Fehlermeldungen behandelt werden
+  $notifications = $val->getNotifications();
 }
 ```
 
-#Befehle
+# Selektoren
+Sie können mit diesen Funktionen die Elemente der Eingabe auswählen, welche die definierten Regeln
+erfüllen sollen.
 
+| Übersicht | | | |
+| :-: | :-: | :-: | :-: |
+|[key](#key)|[key_list](#key_list)|[key_all](#key_all)|[key_regex](#key_regex)|
+|[key_numeric](#key_numeric)|[key_integer](#key_integer)|[key_min_numeric](#key_min_numeric)|[key_max_numeric](#key_max_numeric)|
+|[key_starts_with](#key_starts_with)|[key_union](#key_union)|[key_intersection](#key_intersection)|
+
+#### key
+
+==========================================
+
+#### key_list
+
+==========================================
+
+#### key_all
+
+==========================================
+
+#### key_regex
+
+==========================================
+
+#### key_numeric
+
+==========================================
+
+#### key_integer
+
+==========================================
+
+#### key_min_numeric
+
+==========================================
+
+#### key_max_numeric
+
+==========================================
+
+#### key_starts_with
+
+==========================================
+
+#### key_union
+
+==========================================
+
+#### key_intersection
+
+==========================================
+
+
+# Regeln
+
+| Übersicht | | | |
+| :-: | :-: | :-: | :-: |
+|[satisfy_exists](#satisfy_exists)|[satisfy_not_exists](#satisfy_not_exists)|[satisfy_required](#satisfy_required)|[satisfy_isset](#satisfy_isset)|
+|[satisfy_not_isset](#satisfy_not_isset)|[satisfy_not_empty](#satisfy_not_empty)|[satisfy_empty](#satisfy_empty)|[satisfy_equals_field](#satisfy_equals_field)|
+|[satisfy_not_equals_field](#satisfy_not_equals_field)|[satisfy_regex](#satisfy_regex)|[satisfy_equalTo](#satisfy_equalto)|[satisfy_min_numeric](#satisfy_min_numeric)|
+|[satisfy_max_numeric](#satisfy_max_numeric)|[satisfy_exact_numeric](#satisfy_exact_numeric)|[satisfy_min_len](#satisfy_min_len)|[satisfy_max_len](#satisfy_max_len)|
+|[satisfy_exact_len](#satisfy_exact_len)|[satisfy_in_list](#satisfy_in_list)|[satisfy_not_in_list](#satisfy_not_in_list)|[satisfy_value](#satisfy_value)|
+|[satisfy_file_exists](#satisfy_file_exists)|[satisfy_file_isset](#satisfy_file_isset)|[satisfy_file_error](#satisfy_file_error)|[satisfy_file_no_error](#satisfy_file_no_error)|
+|[satisfy_file_extension](#satisfy_file_extension)|[satisfy_file_mime](#satisfy_file_mime)|[satisfy_file_size](#satisfy_file_size)|[satisfy_file_name](#satisfy_file_name)|
+|[satisfy_file_name_strict](#satisfy_file_name_strict)|[to_float](#to_float)|[to_string](#to_string)|[to_lower](#to_lower)|
+|[to_upper](#to_upper)|[to_integer](#to_integer)|[to_boolean](#to_boolean)|[to_md5](#to_md5)|
+|[to_sha1](#to_sha1)|[to_base64](#to_base64)|[to_string_from_base64](#to_string_from_base64)|[to_object_from_json](#to_object_from_json)|
+|[to_array_from_json](#to_array_from_json)|[to_json](#to_json)|[to_timestamp](#to_timestamp)|[on_error](#on_error)|
+|[on_no_error](#on_no_error)|[on_success](#on_success)|[logic_or](#logic_or)|[perform_this_foreach](#perform_this_foreach)|
+|[perform_foreach](#perform_foreach)|[perform_this_array](#perform_this_array)|[perform_array](#perform_array)|[perform_switch_case](#perform_switch_case)|
+|[sanitize_url](#sanitize_url)|[sanitize](#sanitize)|[set_default](#set_default)|[set_copy](#set_copy)|
+|[set_value](#set_value)|[set_field_value](#set_field_value)|[set_error](#set_error)|[valid_email](#valid_email)|
+|[valid_url](#valid_url)|[valid_url_query](#valid_url_query)|[valid_regex](#valid_regex)|[valid_hash](#valid_hash)|
+|[valid_md5](#valid_md5)|[valid_sha1](#valid_sha1)|[valid_identifier](#valid_identifier)|[valid_user_name](#valid_user_name)|
+|[valid_userName](#valid_username)|[valid_timestamp](#valid_timestamp)|[valid_alpha](#valid_alpha)|[valid_alpha_space](#valid_alpha_space)|
+|[valid_integer](#valid_integer)|[valid_alpha_numeric](#valid_alpha_numeric)|[valid_alpha_space_numeric](#valid_alpha_space_numeric)|[valid_json](#valid_json)|
+|[to_structure](#to_structure)|[is_float](#is_float)|[is_boolean](#is_boolean)|[is_integer](#is_integer)|
+|[is_string](#is_string)|[is_array](#is_array)|
 
 #### satisfy_exists
 
@@ -72,7 +155,7 @@ $val = Validation::open($_POST);
 $val->addSet('action',
              array('satisfy_not_empty'));
 ```
-siehe [empty](http://php.net/manual/de/function.empty.php)
+siehe [php:empty](http://php.net/manual/de/function.empty.php)
 
 ==========================================
 
@@ -84,7 +167,7 @@ $val = Validation::open($_POST);
 $val->addSet('action',
              array('satisfy_empty'));
 ```
-siehe [empty](http://php.net/manual/de/function.empty.php)
+siehe [php:empty](http://php.net/manual/de/function.empty.php)
 
 ==========================================
 
@@ -103,8 +186,8 @@ $val->addSet('newPasswordRepeat',
 #### satisfy_not_equals_field
 
 ```PHP
-// das Feld $_POST['newPasswordRepeat'] darf nicht den selben
-// Inhalt wie das Feld $_POST['newPassword'] haben
+// das Feld $_POST['deleteSheetWarning'] darf nicht den selben
+// Inhalt wie das Feld $_POST['deleteSheet'] haben
 $val = Validation::open($_POST);
 $val->addSet('deleteSheetWarning',
              array('satisfy_not_equals_field'=>'deleteSheet'));
@@ -122,7 +205,7 @@ $val = Validation::open($_POST);
 $val->addSet('key',
              array('satisfy_regex'=>'%^([a-zA-Z0-9_]+)$%'));
 ```
-siehe [PCRE](http://php.net/manual/de/reference.pcre.pattern.syntax.php)
+siehe [php:PCRE](http://php.net/manual/de/reference.pcre.pattern.syntax.php)
 
 ==========================================
 
@@ -251,7 +334,7 @@ $val->addSet('MarkingFile',
              ['satisfy_file_exists']);
 
 ```
-siehe [file_exists](http://php.net/manual/de/function.file-exists.php)
+siehe [php:file_exists](http://php.net/manual/de/function.file-exists.php)
 
 ==========================================
 
@@ -411,7 +494,7 @@ $val->addSet('externalType',
 $val->addSet('field',
              ['to_md5');
 ```
-siehe [md5](http://php.net/manual/de/function.md5.php)
+siehe [php:md5](http://php.net/manual/de/function.md5.php)
 
 ==========================================
 
@@ -421,7 +504,7 @@ siehe [md5](http://php.net/manual/de/function.md5.php)
 $val->addSet('field',
              ['to_sha1');
 ```
-siehe [sha1](http://php.net/manual/de/function.sha1.php)
+siehe [php:sha1](http://php.net/manual/de/function.sha1.php)
 
 ==========================================
 
@@ -431,7 +514,7 @@ siehe [sha1](http://php.net/manual/de/function.sha1.php)
 $val->addSet('field',
              ['to_base64');
 ```
-siehe [base64_encode](http://php.net/manual/de/function.base64-encode.php)
+siehe [php:base64_encode](http://php.net/manual/de/function.base64-encode.php)
 
 ==========================================
 
@@ -442,7 +525,7 @@ siehe [base64_encode](http://php.net/manual/de/function.base64-encode.php)
 $val->addSet('field',
              ['to_string_from_base64');
 ```
-siehe [base64_decode](http://php.net/manual/de/function.base64-decode.php)
+siehe [php:base64_decode](http://php.net/manual/de/function.base64-decode.php)
 
 ==========================================
 
@@ -468,7 +551,7 @@ $val = Validation::open($_POST);
 $val->addSet('elem',
              array('to_json'));
 ```
-siehe [json_encode](http://php.net/manual/de/function.json-encode.php)
+siehe [php:json_encode](http://php.net/manual/de/function.json-encode.php)
 
 ==========================================
 
