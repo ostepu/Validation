@@ -26,7 +26,7 @@ class Validation_Event implements Validation_Interface
         if ($setting['setError'] === true) {
             $result = array('valid'=>true);
             if (!isset($param['type'])){
-                isset($param['type']) = 'message';
+                $param['type'] = 'message';
             }
             
             if (isset($param['type']) && isset($param['text'])) {
@@ -81,7 +81,7 @@ class Validation_Event implements Validation_Interface
         if ($setting['setError'] !== true) {
             $result = array('valid'=>true);
             if (!isset($param['type'])){
-                isset($param['type']) = 'message';
+                $param['type'] = 'message';
             }
             
             if (isset($param['type']) && isset($param['text'])) {
