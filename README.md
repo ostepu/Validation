@@ -762,7 +762,7 @@ $val->addSet('key',
 
 ```PHP
 // alle Schlüssel des Arrays $_POST['approvalCondition'] sollen gültige
-// identifiert sein und alle darin enthaltenen Elemente zwischen
+// identifier sein und alle darin enthaltenen Elemente zwischen
 // 0 und 100 liegen
 $val = Validation::open($_POST);
 $val->addSet('approvalCondition',
@@ -788,7 +788,7 @@ $val->addSet('approvalCondition',
 
 ```PHP
 // die Elemente des Arrays $_POST['proposal'] sollen
-// gültige identifiert sein
+// gültige identifier sein
 $val = Validation::open($_POST);
 $val->addSet('proposal',
              ['perform_this_array'=>[[['key_all'],
@@ -821,14 +821,19 @@ $val->addSet('elem',
 
 #### sanitize_url
 ```PHP
-
+// die URL in $_POST['url'] wird mit filter_var($elem, FILTER_SANITIZE_URL) behandelt
+$val = Validation::open($_POST);
+$val->addSet('url',
+             array('sanitize_url'));
 ```
+siehe [php:empty](http://php.net/manual/de/function.filter-var.php)
 
 ====================================================================================
 
 #### sanitize
 ```PHP
-
+// alle Elemente in $_GET werden bereinigt, mit htmlspecialchars(trim($elem), ENT_QUOTES, 'UTF-8') 
+$val = Validation::open($_GET, array('preRules'=>array('sanitize')));
 ```
 
 ====================================================================================
@@ -886,55 +891,78 @@ $val->addSet('field',
 
 #### valid_email
 ```PHP
-
+// das Feld $_POST['email'] soll eine gültige EMail-Adresse enthalten
+$val = Validation::open($_POST);
+$val->addSet('email',
+                   ['valid_email']);
 ```
 
 ====================================================================================
 
 #### valid_url
 ```PHP
-
+// das Feld $_POST['back'] soll eine gültige URL enthalten
+$val = Validation::open($_POST);
+$val->addSet('back',
+                   ['valid_url']);
 ```
+siehe [php:empty](http://php.net/manual/de/function.parse-url.php)
 
 ====================================================================================
 
 #### valid_url_query
 ```PHP
-
+// das Feld $_POST['back'] soll eine gültige, relative URL enthalten
+$val = Validation::open($_POST);
+$val->addSet('back',
+                   ['valid_url_query']);
 ```
 
 ====================================================================================
 
 #### valid_regex
 ```PHP
-
+// das Feld $_POST['regex'] soll einen gültigen regulären Ausdruck enthalten
+$val = Validation::open($_POST);
+$val->addSet('regex',
+                   ['valid_regex']);
 ```
+siehe [php:empty](http://php.net/manual/de/function.filter-var.php)
+Es wird der Filter FILTER_VALIDATE_REGEXP verwendet.
 
 ====================================================================================
 
 #### valid_hash
 ```PHP
-
+// das Feld $_POST['hash'] soll eine gültige Hashwert enthalten
+$val = Validation::open($_POST);
+$val->addSet('hash',
+                   ['valid_hash']);
 ```
 
 ====================================================================================
 
 #### valid_md5
 ```PHP
-
+// das Feld $_POST['hash'] soll eine gültige md5-Hashwert enthalten
+$val = Validation::open($_POST);
+$val->addSet('hash',
+                   ['valid_md5']);
 ```
 
 ====================================================================================
 
 #### valid_sha1
 ```PHP
-
+// das Feld $_POST['hash'] soll eine gültige sha1-Hashwert enthalten
+$val = Validation::open($_POST);
+$val->addSet('hash',
+                   ['valid_sha1']);
 ```
 
 ====================================================================================
 
 #### valid_identifier
-
 ```PHP
 // das Feld $_POST['sortId'] darf nur 0-9 und _ enthalten
 $val = Validation::open($_POST);
@@ -960,14 +988,17 @@ $val->addSet('sortId',
 ====================================================================================
 
 #### valid_timestamp
-```PHP
 
-```
+siehe [valid_integer](#valid_integer)
 
 ====================================================================================
 
 #### valid_alpha
 ```PHP
+// das Feld $_POST['elem'] darf nur a-z, A-Z und Leerzeichen enthalten
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('valid_alpha'));
 
 ```
 
@@ -975,6 +1006,10 @@ $val->addSet('sortId',
 
 #### valid_alpha_space
 ```PHP
+// das Feld $_POST['elem'] darf nur a-z und A-Z enthalten
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('valid_alpha_space'));
 
 ```
 
@@ -982,6 +1017,10 @@ $val->addSet('sortId',
 
 #### valid_integer
 ```PHP
+// das Feld $_POST['elem'] darf nur 0-9 enthalten
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('valid_integer'));
 
 ```
 
@@ -989,6 +1028,10 @@ $val->addSet('sortId',
 
 #### valid_alpha_numeric
 ```PHP
+// das Feld $_POST['elem'] darf nur 0-9, a-z und A-Z enthalten
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('valid_alpha_numeric'));
 
 ```
 
@@ -996,6 +1039,10 @@ $val->addSet('sortId',
 
 #### valid_alpha_space_numeric
 ```PHP
+// das Feld $_POST['elem'] darf nur 0-9, a-z, A-Z und Leerzeichen enthalten
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('valid_alpha_space_numeric'));
 
 ```
 
@@ -1003,6 +1050,10 @@ $val->addSet('sortId',
 
 #### valid_json
 ```PHP
+// das Feld $_POST['elem'] muss gültiges json enthalten
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('valid_json'));
 
 ```
 
