@@ -76,6 +76,7 @@ class Selection_Key implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+
         $tempKeys = array();
         foreach($keys as $key){
             if (is_int($key)){
@@ -99,12 +100,13 @@ class Selection_Key implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+
         $tempKeys = array();
         foreach($keys as $key){
             if (is_int($key)){
                 $tempKeys[] = $key;
             }
-        }         
+        }
 
         return array('keys'=>$tempKeys);
     }
@@ -114,11 +116,22 @@ class Selection_Key implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+        
+        if (!isset($param)){
+            throw new Exception('Selection rule \''.__METHOD__.'\', missing parameter (min value).');
+        }
+        
+        // hier muss noch ein wenig geprüft werden
+        
+        $tempKeys = array();
+        foreach($keys as $key){
+            if ($key >= $param){
+                $tempKeys[] = $key;
+            }
+        }
 
-        /// ??? ///
-        throw new Exception('Selection rule \''.__METHOD__.'\' is not implemented.');
-
-        return array('keys'=>array());
+        return array('keys'=>$tempKeys);
+        
     }
 
     public static function select_key_max_numeric($keys, $input, $setting = null, $param = null)
@@ -126,11 +139,21 @@ class Selection_Key implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+        
+        if (!isset($param)){
+            throw new Exception('Selection rule \''.__METHOD__.'\', missing parameter (max value).');
+        }
 
-        /// ??? ///
-        throw new Exception('Selection rule \''.__METHOD__.'\' is not implemented.');
+        // hier muss noch ein wenig geprüft werden
+        
+        $tempKeys = array();
+        foreach($keys as $key){
+            if ($key <= $param){
+                $tempKeys[] = $key;
+            }
+        }
 
-        return array('keys'=>array());
+        return array('keys'=>$tempKeys);
     }
 
     public static function select_key_starts_with($keys, $input, $setting = null, $param = null)
@@ -138,11 +161,21 @@ class Selection_Key implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+        
+        if (!isset($param)){
+            throw new Exception('Selection rule \''.__METHOD__.'\', missing parameter (prefix).');
+        }
+        
+        // eventuell kann man auch eine Liste, mit Präfixen, angeben
+        
+        $tempKeys = array();
+        foreach($keys as $key){
+            if (substr($key,0,strlen($param)) === $param){
+                $tempKeys[] = $key;
+            }
+        }
 
-        /// ??? ///
-        throw new Exception('Selection rule \''.__METHOD__.'\' is not implemented.');
-
-        return array('keys'=>array());
+        return array('keys'=>$tempKeys);
     }
 
     public static function select_key_union($keys, $input, $setting = null, $param = null)
