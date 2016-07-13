@@ -934,7 +934,7 @@ Es wird der Filter FILTER_VALIDATE_REGEXP verwendet.
 
 #### valid_hash
 ```PHP
-// das Feld $_POST['hash'] soll eine gültige Hashwert enthalten
+// das Feld $_POST['hash'] soll einen gültigen Hashwert enthalten
 $val = Validation::open($_POST);
 $val->addSet('hash',
                    ['valid_hash']);
@@ -944,7 +944,7 @@ $val->addSet('hash',
 
 #### valid_md5
 ```PHP
-// das Feld $_POST['hash'] soll eine gültige md5-Hashwert enthalten
+// das Feld $_POST['hash'] soll einen gültigen md5-Hashwert enthalten
 $val = Validation::open($_POST);
 $val->addSet('hash',
                    ['valid_md5']);
@@ -954,7 +954,7 @@ $val->addSet('hash',
 
 #### valid_sha1
 ```PHP
-// das Feld $_POST['hash'] soll eine gültige sha1-Hashwert enthalten
+// das Feld $_POST['hash'] soll einen gültigen sha1-Hashwert enthalten
 $val = Validation::open($_POST);
 $val->addSet('hash',
                    ['valid_sha1']);
@@ -1068,6 +1068,10 @@ $val->addSet('elem',
 
 #### is_float
 ```PHP
+// das Feld $_POST['elem'] soll vom Typ float sein oder sich darin umwandeln lassen
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('is_float'));
 
 ```
 
@@ -1075,6 +1079,10 @@ $val->addSet('elem',
 
 #### is_boolean
 ```PHP
+// das Feld $_POST['elem'] soll einen gültigen Wahrheitswert darstellen
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('is_boolean'));
 
 ```
 
@@ -1082,6 +1090,10 @@ $val->addSet('elem',
 
 #### is_integer
 ```PHP
+// das Feld $_POST['elem'] soll einen gültigen Zahlwert darstellen oder darin umgewandelt werden können
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('is_integer'));
 
 ```
 
@@ -1089,6 +1101,10 @@ $val->addSet('elem',
 
 #### is_string
 ```PHP
+// das Feld $_POST['elem'] soll einen gültigen String darstellen
+$val = Validation::open($_POST);
+$val->addSet('elem',
+             array('is_string'));
 
 ```
 
