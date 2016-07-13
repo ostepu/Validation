@@ -36,18 +36,46 @@ erfüllen sollen.
 |[key_starts_with](#key_starts_with)|[key_union](#key_union)|[key_intersection](#key_intersection)|
 
 #### key
+```PHP
+// Das Feld $_POST['elem'] soll ein gültiger md5-Hash sein.
+$val = Validation::open($_POST);
+$val->addSet(['key' => 'elem'],
+             ['valid_md5']);
+```
+Man kann ```['key' => 'elem']``` auch als ```'elem'``` schreiben.
 
 ====================================================================================
 
 #### key_list
+```PHP
+// Die Felder a, b, und c aus $_POST sollen ein gültiger md5-Hash sein.
+$val = Validation::open($_POST);
+$val->addSet(['key_list' => ['a', 'b', 'c']],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
 #### key_all
+```PHP
+// Alle Elemente des Arrays $_POST['externalId'] sollen einen regulären Ausdruck erfüllen.
+// Dazu wird das Array mit perform_this_array durchlaufen und bei der Auswahl der Felder
+// sind dann alle (key_all) erlaubt.
+$val = Validation::open($_POST);
+$val->addSet('externalId',
+             ['perform_this_array'=>[[['key_all'],
+                                      ['satisfy_regex'=>'%^([a-zA-Z0-9_]+)$%']]]]);
+```
 
 ====================================================================================
 
 #### key_regex
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, welche den Ausdruck %^([a-zA-Z0-9_]+)$% erfüllen.
+$val = Validation::open($_POST);
+$val->addSet(['key_regex' => '%^([a-zA-Z0-9_]+)$%'],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
