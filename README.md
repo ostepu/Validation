@@ -80,22 +80,52 @@ $val->addSet(['key_regex' => '%^([a-zA-Z0-9_]+)$%'],
 ====================================================================================
 
 #### key_numeric
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, welche vom Typ Integer sind oder eine Ganzzahl darstellen (als String).
+$val = Validation::open($_POST);
+$val->addSet(['key_numeric'],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
 #### key_integer
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, welche vom Typ Integer sind.
+$val = Validation::open($_POST);
+$val->addSet(['key_integer'],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
 #### key_min_numeric
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, welche mindestens den Schlüsselwert 100 besitzen.
+$val = Validation::open($_POST);
+$val->addSet(['key_min_numeric' => 100],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
 #### key_max_numeric
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, welche maximal den Schlüsselwert 100 besitzen.
+$val = Validation::open($_POST);
+$val->addSet(['key_max_numeric' => 100],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
 #### key_starts_with
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, deren Schlüssel mit abc beginnt.
+$val = Validation::open($_POST);
+$val->addSet(['key_starts_with' => 'abc'],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
