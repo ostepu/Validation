@@ -26,8 +26,11 @@ if ($val->isValid()){
 ```
 
 # Selektoren
-Sie können mit diesen Funktionen die Elemente der Eingabe auswählen, welche die definierten Regeln
-erfüllen sollen.
+Sie können mit diesen Funktionen die Elemente der Eingabe auswählen, welche dann die definierten Regeln
+erfüllen sollen. Dabei gibt es Selektoren mit den Präfixen ```key_``` und ```elem_```.
+```key_``` => wählt die ELemente anhand des Schlüssels (aus einem Array)
+```elem_``` => wählt die ELemente anhand des Wertes (aus einem Array)
+
 
 | Übersicht | | | |
 | :-: | :-: | :-: | :-: |
@@ -81,7 +84,8 @@ $val->addSet(['key_regex' => '%^([a-zA-Z0-9_]+)$%'],
 
 #### key_numeric
 ```PHP
-// Es werden die Felder aus $_POST ausgewählt, welche vom Typ Integer sind oder eine Ganzzahl darstellen (als String).
+// Es werden die Felder aus $_POST ausgewählt, welche vom Typ Integer sind oder eine Ganzzahl
+// darstellen (als String).
 $val = Validation::open($_POST);
 $val->addSet(['key_numeric'],
              ['valid_md5']);
