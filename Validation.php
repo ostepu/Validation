@@ -325,7 +325,13 @@ class Validation
     public function __construct($input=null, $settings = array())
     {
         if (isset($input)) {
+            if (!is_array($input)){
+                $input = array($input);
+            }
+            
             $this->_input = array_merge($this->_input, $input);
+        } else {
+            $input = array();
         }
 
         $this->_settings = array_merge($this->_settings, $settings);
