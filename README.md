@@ -134,10 +134,24 @@ $val->addSet(['key_starts_with' => 'abc'],
 ====================================================================================
 
 #### key_union
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, deren Schlüssel mit aaa oder bbb beginnen.
+$val = Validation::open($_POST);
+$val->addSet(['key_union' => ['key_starts_with' => 'aaa',
+                              'key_starts_with' => 'bbb']],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
 #### key_intersection
+```PHP
+// Es werden die Felder aus $_POST ausgewählt, welche mindestens den Schlüsselwert 100 besitzen und mit '2' beginnen.
+$val = Validation::open($_POST);
+$val->addSet(['key_intersection' => ['key_min_numeric' => '100',
+                                     'key_starts_with' => '2']],
+             ['valid_md5']);
+```
 
 ====================================================================================
 
@@ -946,7 +960,14 @@ $val->addSet('field',
 
 #### set_error
 ```PHP
+// es wird das Feld $_POST['field'] ausgewählt und anschließend die 
+// Validierung abgebrochen (kann auch auf false gesetzt werden).
+// Dabei ignorieren manche Befehle diesen Fehlerwert und werden trotzdem ausgeführt
+// (Bsp.: Fehlermeldungen).
 
+$val = Validation::open($_POST);
+$val->addSet('field',
+             array('set_error'=>true));
 ```
 
 ====================================================================================
