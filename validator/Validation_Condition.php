@@ -113,9 +113,18 @@ class Validation_Condition implements Validation_Interface
             return;
         }
 
-        if (empty($input[$key])) {
+        if ($input[$key] === '') {
             return false;
         }
+
+        if ($input[$key] === array()) {
+            return false;
+        }
+
+        if ($input[$key] === null) {
+            return false;
+        }
+        
         return;
     }
 
@@ -138,11 +147,19 @@ class Validation_Condition implements Validation_Interface
             return;
         }
 
-        if (!empty($input[$key])) {
-            return false;
+        if ($input[$key] === '') {
+            return;
         }
 
-        return;
+        if ($input[$key] === null) {
+            return;
+        }
+
+        if ($input[$key] === array()) {
+            return;
+        }
+
+        return false;
     }
 
     /**
