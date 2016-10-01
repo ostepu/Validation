@@ -547,10 +547,11 @@ class Validation
 
             if (is_array($res) || $res === false) {
                 if (isset($res['notification'])) {
-                    $this->_notifications = array_merge(
-                        $this->_notifications,
-                        $res['notification']
-                    );
+                    $this->_notifications[] = $res['notification'];
+                }
+                
+                if (isset($res['notifications'])) {
+                    $this->_notifications = array_merge($this->_notifications, $res['notifications']);
                 }
 
                 if (isset($res['errors'])) {
@@ -646,10 +647,11 @@ class Validation
 
                     if (is_array($res) || $res === false) {
                         if (isset($res['notification'])) {
-                            $this->_notifications = array_merge(
-                                $this->_notifications,
-                                $res['notification']
-                            );
+                            $this->_notifications[] = $res['notification'];
+                        }
+                
+                        if (isset($res['notifications'])) {
+                            $this->_notifications = array_merge($this->_notifications, $res['notifications']);
                         }
 
                         if (isset($res['errors'])) {

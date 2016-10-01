@@ -30,7 +30,7 @@ class Validation_Event implements Validation_Interface
             }
             
             if (isset($param['type']) && isset($param['text'])) {
-                $result['notification'] = array(array('type'=>$param['type'],'text'=>$param['text']));
+                $result['notification'] = array('type'=>$param['type'],'text'=>$param['text']);
             }
 
             if (isset($param['value'])) {
@@ -85,7 +85,7 @@ class Validation_Event implements Validation_Interface
             }
             
             if (isset($param['type']) && isset($param['text'])) {
-                $result['notification'] = array(array('type'=>$param['type'],'text'=>$param['text']));
+                $result['notification'] = array('type'=>$param['type'],'text'=>$param['text']);
             }
 
             if (isset($param['value'])) {

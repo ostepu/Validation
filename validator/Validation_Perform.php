@@ -43,6 +43,7 @@ class Validation_Perform implements Validation_Interface
             } else {
                 return array('valid'=>false, 'notifications'=>$f->getNotifications(), 'errors'=>$f->getErrors());
             }
+            unset($f);
         }
 
         return array('valid'=>true, 'field'=>$key, 'value'=>$result);
