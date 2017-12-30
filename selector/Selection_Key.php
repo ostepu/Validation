@@ -1,4 +1,7 @@
 <?php
+
+include_once dirname(__FILE__) . '/../Validation_Interface.php';
+
 class Selection_Key implements Validation_Interface
 {
     private static $indicator = 'key';
