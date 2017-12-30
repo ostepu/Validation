@@ -278,17 +278,18 @@ class Validation_Structure implements Validation_Interface
             return;
         }
         
-        if (is_int($input[$key])){
+        if (is_int($input[$key]) || (is_float($input[$key]) && floor($input[$key]) === $input[$key])){
             return;
         }
 
-        if (is_string($input[$key]) && !ctype_digit($input[$key])) {
-            return false; // contains non digit characters
+        if (is_string($input[$key])) {
+            return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([0-9-]+)$%');
         }
+
         if (!is_int((int) $input[$key])) {
             return false; // other non-integer value or exceeds PHP_MAX_INT
         }
-        
+
         if (!is_string($input[$key])){
             return false;
         }

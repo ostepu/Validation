@@ -82,7 +82,7 @@ class Validation_StructureTest extends PHPUnit_Framework_TestCase {
      * @covers Validation_Structure::validate_valid_url
      */
     public function testValidate_valid_url() {
-        $this->simpleListTest([false,false,null,false,false,false,false,false,false,false],
+        $this->simpleListTest([false,false,null,null,false,null,false,false,false,false],
                 'validate_valid_url',
                 array('z0'=>['https://aa.de', null], 'z1'=>['http://aa.de', null], 'z2'=>['http://aa', null], 'z3'=>['http://aa/gg', null]));
    }
@@ -91,7 +91,7 @@ class Validation_StructureTest extends PHPUnit_Framework_TestCase {
      * @covers Validation_Structure::validate_valid_url_query
      */
     public function testValidate_valid_url_query() {
-        $this->simpleListTest([false,false,null,false,false,false,false,false,false,false],
+        $this->simpleListTest([false,false,null,null,false,null,false,false,false,false],
                 'validate_valid_url_query',
                 array('z0'=>['/aa', null], 'z1'=>['/aa/pp', null], 'z2'=>['/aa/aa.html', null]));
    }
@@ -109,7 +109,7 @@ class Validation_StructureTest extends PHPUnit_Framework_TestCase {
      * @covers Validation_Structure::validate_valid_hash
      */
     public function testValidate_valid_hash() {
-        $this->simpleListTest([null,false,null,null,false,false,false,null,null,false],
+        $this->simpleListTest([false,false,null,null,false,false,false,false,false,false],
                 'validate_valid_hash',
                 array('z0'=>['FF', null],'z1'=>['00', null],'z2'=>['AF0BA4848933', null],'z3'=>['G', false],'z4'=>['0G', false]));
     }
@@ -136,7 +136,7 @@ class Validation_StructureTest extends PHPUnit_Framework_TestCase {
      * @covers Validation_Structure::validate_valid_identifier
      */
     public function testValidate_valid_identifier() {
-        $this->simpleListTest([null,false,null,null,false,false,false,null,null,false],
+        $this->simpleListTest([false,false,null,false,false,false,false,false,false,false],
                 'validate_valid_identifier',
                 array('z0'=>['24153', null],'z1'=>['24153_', null],'z2'=>['_24153', null],'z3'=>['24153_1', null]));
     }
