@@ -1,6 +1,7 @@
 <?php
 
 include_once dirname(__FILE__) . '/../Validation_Interface.php';
+include_once dirname(__FILE__) . '/../Validation.php';
 
 class Selection_Key implements Validation_Interface
 {
@@ -19,10 +20,6 @@ class Selection_Key implements Validation_Interface
 
         if (!isset($param)){
             throw new Exception('Selection rule \''.__METHOD__.'\', missing parameter.');
-        }
-
-        if (is_array($param)){
-            throw new Exception('Selection rule \''.__METHOD__.'\', string required.');
         }
 
         return array('keys'=>array($param));
@@ -124,10 +121,10 @@ class Selection_Key implements Validation_Interface
             throw new Exception('Selection rule \''.__METHOD__.'\', missing parameter (min value).');
         }
         
-        // hier muss noch ein wenig geprüft werden
+        $res = self::select_key_numeric($keys, $input, $setting, $param);
         
         $tempKeys = array();
-        foreach($keys as $key){
+        foreach($res['keys'] as $key){
             if ($key >= $param){
                 $tempKeys[] = $key;
             }
@@ -147,10 +144,10 @@ class Selection_Key implements Validation_Interface
             throw new Exception('Selection rule \''.__METHOD__.'\', missing parameter (max value).');
         }
 
-        // hier muss noch ein wenig geprüft werden
+        $res = self::select_key_numeric($keys, $input, $setting, $param);
         
         $tempKeys = array();
-        foreach($keys as $key){
+        foreach($res['keys'] as $key){
             if ($key <= $param){
                 $tempKeys[] = $key;
             }
@@ -192,10 +189,12 @@ class Selection_Key implements Validation_Interface
         }
 
         $tempKeys = array();
-        $f = Validation();
-        foreach($param as $selectors){
-            $m = $f->collectKeys($keys,$selectors);
-            $tempKeys = array_merge($tempKeys, $m);
+        $f = new Validation([], ['setError'=>false]);
+        $rules = $f->convertSelector($param);
+        
+        foreach($rules as $selector){
+            $m = $f->collectKeys($keys,[$selector]);
+            $tempKeys = array_merge(array_values($tempKeys), array_values($m));
         }
 
         return array('keys'=>$tempKeys);
@@ -212,13 +211,15 @@ class Selection_Key implements Validation_Interface
         }
 
         $tempKeys = null;
-        $f = Validation();
-        foreach($param as $selectors){
-            $m = $f->collectKeys($keys,$selectors);
+        $f = new Validation([], ['setError'=>false]);
+        $rules = $f->convertSelector($param);
+
+        foreach($rules as $selector){
+            $m = $f->collectKeys($keys,[$selector]);
             if ($tempKeys === null){
-                $tempKeys = $m;
+                $tempKeys = array_values($m);
             } else {
-                $tempKeys = array_intersect($tempKeys, $m);  
+                $tempKeys = array_intersect(array_values($tempKeys), array_values($m));  
             }
         }
 
@@ -226,6 +227,6 @@ class Selection_Key implements Validation_Interface
             $tempKeys = array();
         }
 
-        return array('keys'=>$tempKeys);
+        return array('keys'=>array_values($tempKeys));
     }
 }
