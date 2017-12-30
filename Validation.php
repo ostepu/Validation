@@ -99,7 +99,7 @@ class Validation
      * @param  [[Type]] $rules [[Description]]
      * @return [[Type]] [[Description]]
      */
-    private function convertRules($rules)
+    public function convertRules($rules)
     {
         $tempRules = array();
         if (!is_array($rules)) {
@@ -120,7 +120,7 @@ class Validation
      * @param  [[Type]] $rules [[Description]]
      * @return [[Type]] [[Description]]
      */
-    private function convertSelector($rules)
+    public function convertSelector($rules)
     {
         $tempRules = array();
         if (!is_array($rules)) {
