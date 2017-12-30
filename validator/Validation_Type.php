@@ -1,6 +1,7 @@
 <?php
 
 include_once dirname(__FILE__) . '/../Validation_Interface.php';
+include_once dirname(__FILE__) . '/Validation_Condition.php';
 
 class Validation_Type implements Validation_Interface
 {
