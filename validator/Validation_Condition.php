@@ -1,4 +1,7 @@
 <?php
+
+include_once dirname(__FILE__) . '/../Validation_Interface.php';
+
 class Validation_Condition implements Validation_Interface
 {
     private static $indicator = 'satisfy';
@@ -207,7 +210,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_not_equals_field($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -241,12 +244,16 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_regex($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter (regex).');
+        }
+        
+        if (!is_string($input[$key])){
+            return false;
         }
 
         if (preg_match($param, $input[$key]) === 0) {
@@ -281,7 +288,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_min_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -315,7 +322,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_max_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -349,7 +356,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_exact_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -383,7 +390,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_min_len($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -414,7 +421,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_max_len($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -445,7 +452,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_exact_len($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 

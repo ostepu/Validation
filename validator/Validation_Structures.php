@@ -1,7 +1,15 @@
 <?php
+
+include_once dirname(__FILE__) . '/../Validation_Interface.php';
+
 class Validation_Structures implements Validation_Interface
 {
     public static $indicator = 'to';
+
+    public static function getIndicator()
+    {
+        return self::$indicator;
+    }
 
     public static function validate_to_structure($key, $input, $setting = null, $param = null)
     {

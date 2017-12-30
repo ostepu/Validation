@@ -1,4 +1,7 @@
 <?php
+
+include_once dirname(__FILE__) . '/../Validation_Interface.php';
+
 class Validation_Structure implements Validation_Interface
 {
     private static $indicator = 'valid';
@@ -19,7 +22,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_email($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -41,8 +44,12 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_url($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
+        }
+        
+        if (!is_string($input[$key])){
+            return false;
         }
 
         if (parse_url($input[$key]) === false) {
@@ -63,8 +70,12 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_url_query($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
+        }
+        
+        if (!is_string($input[$key])){
+            return false;
         }
 
         $var = parse_url($input[$key]);
@@ -98,11 +109,11 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_regex($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
-        if (!filter_var($input[$key], FILTER_VALIDATE_REGEXP)) {
+        if (@preg_match($input[$key], null) === false) {
             return false;
         }
 
@@ -120,7 +131,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_hash($key, $input, $setting = null, $param = null)
     {
-        return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([a-fA-F0-0]+)$%');
+        return Validation_Condition::validate_satisfy_regex($key, $input, $setting, '%^([a-fA-F0-9]+)$%');
     }
 
     /**
@@ -176,7 +187,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_user_name($key, $input, $setting = null, $param = null)
     {
-        return Validation_Condition::validate_valid_userName($key, $input, $setting, $param);
+        return Validation_Structure::validate_valid_userName($key, $input, $setting, $param);
     }
 
     /**
@@ -218,7 +229,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_alpha($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -240,7 +251,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_alpha_space($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -262,7 +273,11 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_integer($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+            return;
+        }
+        
+        if (is_int($input[$key])){
             return;
         }
 
@@ -271,6 +286,10 @@ class Validation_Structure implements Validation_Interface
         }
         if (!is_int((int) $input[$key])) {
             return false; // other non-integer value or exceeds PHP_MAX_INT
+        }
+        
+        if (!is_string($input[$key])){
+            return false;
         }
 
         return;
@@ -287,7 +306,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_alpha_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -309,7 +328,7 @@ class Validation_Structure implements Validation_Interface
      */
     public static function validate_valid_alpha_space_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || empty($input[$key])) {
+        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -334,10 +353,22 @@ class Validation_Structure implements Validation_Interface
         if ($setting['setError'] || !isset($input[$key])) {
             return;
         }
+        
+        if (!is_string($input[$key])){
+            return false;
+        }
+        
+        if ($input[$key] == '' || $input[$key] == '[]'){
+            return;
+        }
 
         $temp = @json_decode($input[$key]);
 
         if ($temp === null) {
+            return false;
+        }
+        
+        if (!is_object($temp)){
             return false;
         }
 

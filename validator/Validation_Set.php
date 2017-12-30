@@ -1,4 +1,7 @@
 <?php
+
+include_once dirname(__FILE__) . '/../Validation_Interface.php';
+
 class Validation_Set implements Validation_Interface
 {
     private static $indicator = 'set';
@@ -21,6 +24,10 @@ class Validation_Set implements Validation_Interface
     {
         if ($setting['setError']) {
             return;
+        }
+
+        if (!isset($param)) {
+            throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
 
         if (!isset($input[$key])) {
@@ -48,6 +55,11 @@ class Validation_Set implements Validation_Interface
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
+        
+        // wenn das Feld nicht existiert, dann kann nicht kopiert werden
+        if (!isset($input[$key])){
+            return false;
+        }
 
         return array('valid'=>true, 'field'=>$param, 'value'=>$input[$key]);
     }
@@ -65,6 +77,10 @@ class Validation_Set implements Validation_Interface
     {
         if ($setting['setError']) {
             return;
+        }
+
+        if (!isset($param)) {
+            throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
 
         return array('valid'=>true, 'field'=>$key, 'value'=>$param);
