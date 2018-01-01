@@ -16,8 +16,6 @@ class Selection_KeyTest extends PHPUnit_Framework_TestCase {
     
     protected $simpleInput = array('a'=>2, 'b'=>[1,2,3,4], 'c'=>null, 'd'=>'abc', 'e'=>1.2, 'f'=>'1.2', 'g'=>true, 'h'=>0, 'i'=>1, 'j'=>[], '0'=>'a', '0b'=>'b', 2=>'c', 'a_'=>'d', 'a '=>'e', 'abc'=>'f', '1.2'=>'g', 1=>'h', 0=>'i');
 
-
-
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
