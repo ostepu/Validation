@@ -67,6 +67,10 @@ class Validation_Condition implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+        
+        if (!is_string($key) && !is_int($key)){
+            return false;
+        }
 
         if (!isset($input[$key])) {
             return false;
@@ -90,6 +94,10 @@ class Validation_Condition implements Validation_Interface
             return;
         }
 
+        if (!is_string($key) && !is_int($key)){
+            return;
+        }
+        
         if (isset($input[$key])) {
             return false;
         }
@@ -111,9 +119,13 @@ class Validation_Condition implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+        
+        if (!is_string($key) && !is_int($key)){
+            return false;
+        }
 
         if (!isset($input[$key])) {
-            return;
+            return false;
         }
 
         if ($input[$key] === '') {
@@ -144,6 +156,10 @@ class Validation_Condition implements Validation_Interface
     {
         if ($setting['setError']) {
             return;
+        }
+        
+        if (!is_string($key) && !is_int($key)){
+            return false;
         }
 
         if (!isset($input[$key])) {
@@ -210,7 +226,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_not_equals_field($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError'] || (isset($input[$key]) && is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -390,21 +406,39 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_min_len($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) || $input[$key]===''){
+            return false;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
+        
+        if (is_array($param) || (is_string($param) && !ctype_digit($param))){
+            return false;
+        }
 
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($input[$key]) >= (int) $param) {
-                return;
+        if (is_string($input[$key])){
+            if (function_exists('mb_strlen')) {
+                if (mb_strlen($input[$key]) >= (int) $param) {
+                    return;
+                }
+            } else {
+                if (strlen($input[$key]) >= (int) $param) {
+                    return;
+                }
             }
-        } else {
-            if (strlen($input[$key]) >= (int) $param) {
+        }
+        
+        if (is_array($input[$key])){
+            if (count($input[$key]) >= (int) $param) {
                 return;
+            } else {
+                return false;
             }
         }
         return false;
@@ -421,21 +455,39 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_max_len($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) || $input[$key]===''){
+            return false;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
+        
+        if (is_array($param) || (is_string($param) && !ctype_digit($param))){
+            return false;
+        }
 
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($input[$key]) <= (int) $param) {
-                return;
+        if (is_string($input[$key])){
+            if (function_exists('mb_strlen')) {
+                if (mb_strlen($input[$key]) <= (int) $param) {
+                    return;
+                }
+            } else {
+                if (strlen($input[$key]) <= (int) $param) {
+                    return;
+                }
             }
-        } else {
-            if (strlen($input[$key]) <= (int) $param) {
+        }
+        
+        if (is_array($input[$key])){
+            if (count($input[$key]) <= (int) $param) {
                 return;
+            } else {
+                return false;
             }
         }
         return false;
@@ -452,21 +504,39 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_exact_len($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) || $input[$key]===''){
+            return false;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
+        
+        if (is_array($param) || (is_string($param) && !ctype_digit($param))){
+            return false;
+        }
 
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($input[$key]) == (int) $param) {
-                return;
+        if (is_string($input[$key])){
+            if (function_exists('mb_strlen')) {
+                if (mb_strlen($input[$key]) == (int) $param) {
+                    return;
+                }
+            } else {
+                if (strlen($input[$key]) == (int) $param) {
+                    return;
+                }
             }
-        } else {
-            if (strlen($input[$key]) == (int) $param) {
+        }
+        
+        if (is_array($input[$key])){
+            if (count($input[$key]) == (int) $param) {
                 return;
+            } else {
+                return false;
             }
         }
         return false;
@@ -535,8 +605,16 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_value($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key])) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) && !isset($param)){
+            return;
+        }
+        
+        if (!isset($input[$key])){
+            return false;
         }
 
         if ($input[$key] === $param) {
