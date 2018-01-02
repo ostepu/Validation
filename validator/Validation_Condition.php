@@ -304,23 +304,30 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_min_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) || $input[$key]===''){
+            return false;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
-
-        if (is_string($input[$key]) && !ctype_digit($input[$key])) {
-            return false; // contains non digit characters
+        
+        if (is_array($param) || (is_string($param) && !ctype_digit($param))){
+            return false;
         }
 
         if (!is_int((int) $input[$key])) {
             return false; // other non-integer value or exceeds PHP_MAX_INT
         }
+        
+        $a = (int) $input[$key];
+        $b = (int) $param;
 
-        if ($input[$key]>=$param) {
+        if ($a>=$b) {
             return;
         }
 
@@ -338,23 +345,30 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_max_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) || $input[$key]===''){
+            return false;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
-
-        if (is_string($input[$key]) && !ctype_digit($input[$key])) {
-            return false; // contains non digit characters
+        
+        if (is_array($param) || (is_string($param) && !ctype_digit($param))){
+            return false;
         }
 
         if (!is_int((int) $input[$key])) {
             return false; // other non-integer value or exceeds PHP_MAX_INT
         }
+        
+        $a = (int) $input[$key];
+        $b = (int) $param;
 
-        if ($input[$key]<=$param) {
+        if ($a<=$b) {
             return;
         }
 
@@ -372,12 +386,20 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_exact_numeric($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ($setting['setError']) {
             return;
+        }
+        
+        if (!isset($input[$key]) || $input[$key]===''){
+            return false;
         }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
+        }
+        
+        if (is_array($param) || (is_string($param) && !ctype_digit($param))){
+            return false;
         }
 
         if (is_string($input[$key]) && !ctype_digit($input[$key])) {
@@ -388,7 +410,7 @@ class Validation_Condition implements Validation_Interface
             return false; // other non-integer value or exceeds PHP_MAX_INT
         }
 
-        if ($input[$key] == $param) {
+        if ($input[$key] === $param) {
             return;
         }
 
@@ -553,12 +575,20 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_in_list($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key])) {
+        if ($setting['setError']) {
             return;
         }
-
+        
+        if (!isset($input[$key])){
+            return false;
+        }
+        
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter (array).');
+        }
+        
+        if (!is_array($param)){
+            throw new Exception('Validation rule \''.__METHOD__.'\', param should be an array.');
         }
 
         if (in_array($input[$key], $param)) {
@@ -582,9 +612,17 @@ class Validation_Condition implements Validation_Interface
         if ($setting['setError'] || !isset($input[$key])) {
             return;
         }
+        
+        if (!isset($input[$key])){
+            return false;
+        }
 
         if (!isset($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter (array).');
+        }
+        
+        if (!is_array($param)){
+            throw new Exception('Validation rule \''.__METHOD__.'\', param should be an array.');
         }
 
         if (!in_array($input[$key], $param)) {
@@ -694,8 +732,16 @@ class Validation_Condition implements Validation_Interface
         if (!$setting['setError'] && ( !isset($input[$key]['error']))) {
             return;
         }
+        
+        if (!is_array($input[$key])){
+            return;
+        }
 
         $file = $input[$key];
+        
+        if (!is_int($file['error'])){
+            return;
+        }
 
         if ($file['error'] !== 0 && $file['error'] !== 4) {
             return;
@@ -722,8 +768,16 @@ class Validation_Condition implements Validation_Interface
         if ($setting['setError']) {
             return;
         }
+        
+        if (!is_array($input[$key])){
+            return false;
+        }
 
         $file = $input[$key];
+        
+        if (!is_int($file['error'])){
+            return false;
+        }
 
         if ($file['error'] === 0 || $file['error'] === 4) {
             return;
@@ -768,6 +822,10 @@ class Validation_Condition implements Validation_Interface
                 return false;
             }
         } else {
+            if (!is_array($setting)){
+                $setting=array();
+            }
+            
             $f = new Validation(array('ext'=>$ext), $setting);
             foreach ($param as $rule) {
                 $f->addSet('ext', $rule);

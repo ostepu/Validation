@@ -12,9 +12,10 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
      */
     protected $object;
     
-    protected $simpleInput = array('a'=>2, 'b'=>[1,2,3,4], 'c'=>null, 'd'=>'abc', '2'=>1.2, 2=>'1.2', 0=>true, 1=>0, 'i'=>1, 'j'=>[], 'k'=>'');
+    protected $simpleInput = array('a'=>2, 'b'=>[1,2,3,4], 'c'=>null, 'd'=>'abc', '2'=>1.2, 2=>'1.2', 0=>true, 1=>0, 'i'=>1, 'j'=>[], 'k'=>'', 'l'=>'2');
     protected $simpleInput2 = array('a'=>1, 'a2'=>1, 'b'=>'1', 'b2'=>'1', 'c'=>null, 'c2'=>null, 'd'=>[], 'd2'=>[], 'e'=>[1,2,3,4], 'e2'=>[1,2,3,4], 1=>[1,2,3], 12=>[1,2,3]);
     protected $simpleInput2Keys = array('a','b','c','d','e',1);
+    protected $simpleFileInput = array('a'=>['error'=>0, 'tmp_name'=>'a_tmp.txt', 'name'=>'a.txt', 'size'=>5]);
 
 
     /**
@@ -23,9 +24,10 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {
         $this->object = new Validation_Condition;
-        $simpleInput = array('a'=>2, 'b'=>[1,2,3,4], 'c'=>null, 'd'=>'abc', '2'=>1.2, 2=>'1.2', 0=>true, 1=>0, 'i'=>1, 'j'=>[], 'k'=>'');
+        $simpleInput = array('a'=>2, 'b'=>[1,2,3,4], 'c'=>null, 'd'=>'abc', '2'=>1.2, 2=>'1.2', 0=>true, 1=>0, 'i'=>1, 'j'=>[], 'k'=>'', 'l'=>'2');
         $simpleInput2 = array('a'=>1, 'a2'=>1, 'b'=>'1', 'b2'=>'1', 'c'=>null, 'c2'=>null, 'd'=>[], 'd2'=>[], 'e'=>[1,2,3,4], 'e2'=>[1,2,3,4], 1=>[1,2,3], 12=>[1,2,3]);
         $simpleInput2Keys = array('a','b','c','d','e',1);
+        $simpleFileInput = array('a'=>['error'=>0, 'tmp_name'=>'a_tmp.txt', 'name'=>'a.txt', 'size'=>5]);
     }
 
     /**
@@ -178,7 +180,6 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_regex
-     * @todo   Implement testValidate_satisfy_regex().
      */
     public function testValidate_satisfy_regex() {
         // Remove the following lines when you implement this test.
@@ -206,35 +207,106 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_min_numeric
-     * @todo   Implement testValidate_satisfy_min_numeric().
      */
     public function testValidate_satisfy_min_numeric() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $i=0;
+        foreach ($this->simpleInput as $key => $value){
+            self::assertSame(false, $this->object->validate_satisfy_min_numeric($key, $this->simpleInput,null, 10), $key);
+            
+            if ($value===null)$value='nnn';
+            $this->simpleInput['q'] = 55;
+            $this->object->validate_satisfy_min_numeric('q', $this->simpleInput,null, $value);
+            $i++;
+        }
+        
+        $this->simpleInput['a2'] = 1;
+        $this->simpleInput['a3'] = 3;
+        $this->simpleInput['l2'] = '1';
+        $this->simpleInput['l3'] = '3';
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('a', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_min_numeric('a2', $this->simpleInput,null, 2));
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('a3', $this->simpleInput,null, 2));
+        
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('l', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_min_numeric('l2', $this->simpleInput,null, '2'));
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('l3', $this->simpleInput,null, '2'));
+        
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('l', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_min_numeric('l2', $this->simpleInput,null, 2));
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('l3', $this->simpleInput,null, 2));
+        
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('a', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_min_numeric('a2', $this->simpleInput,null, '2'));
+        self::assertSame(null, $this->object->validate_satisfy_min_numeric('a3', $this->simpleInput,null, '2'));
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_max_numeric
-     * @todo   Implement testValidate_satisfy_max_numeric().
      */
     public function testValidate_satisfy_max_numeric() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $i=0;
+        foreach ($this->simpleInput as $key => $value){
+            $this->object->validate_satisfy_max_numeric($key, $this->simpleInput,null, 1);
+            
+            if ($value===null)$value='nnn';
+            $this->object->validate_satisfy_max_numeric('a', $this->simpleInput,null, $value);
+            $i++;
+        }
+        
+        $this->simpleInput['a2'] = 1;
+        $this->simpleInput['a3'] = 3;
+        $this->simpleInput['l2'] = '1';
+        $this->simpleInput['l3'] = '3';
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('a', $this->simpleInput,null, 2));
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('a2', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_max_numeric('a3', $this->simpleInput,null, 2));
+        
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('l', $this->simpleInput,null, '2'));
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('l2', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_max_numeric('l3', $this->simpleInput,null, '2'));
+        
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('a', $this->simpleInput,null, '2'));
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('a2', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_max_numeric('a3', $this->simpleInput,null, '2'));
+        
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('l', $this->simpleInput,null, 2));
+        self::assertSame(null, $this->object->validate_satisfy_max_numeric('l2', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_max_numeric('l3', $this->simpleInput,null, 2));
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_exact_numeric
-     * @todo   Implement testValidate_satisfy_exact_numeric().
      */
     public function testValidate_satisfy_exact_numeric() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $i=0;
+        foreach ($this->simpleInput as $key => $value){
+            self::assertSame(false, $this->object->validate_satisfy_exact_numeric($key, $this->simpleInput,null, 10), $key);
+            
+            if ($value===null)$value='nnn';
+            $this->simpleInput['q'] = '55';
+            self::assertSame(false, $this->object->validate_satisfy_exact_numeric('q', $this->simpleInput,null, $value), $value);
+            $i++;
+        }
+        
+        $this->simpleInput['a2'] = 1;
+        $this->simpleInput['a3'] = 3;
+        $this->simpleInput['l2'] = '1';
+        $this->simpleInput['l3'] = '3';
+        self::assertSame(null, $this->object->validate_satisfy_exact_numeric('a', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('a2', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('a3', $this->simpleInput,null, 2));
+        
+        self::assertSame(null, $this->object->validate_satisfy_exact_numeric('l', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('l2', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('l3', $this->simpleInput,null, '2'));
+        
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('l', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('l2', $this->simpleInput,null, 2));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('l3', $this->simpleInput,null, 2));
+        
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('a', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('a2', $this->simpleInput,null, '2'));
+        self::assertSame(false, $this->object->validate_satisfy_exact_numeric('l3', $this->simpleInput,null, '2'));
     }
 
     /**
@@ -270,7 +342,7 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
         $i=0;
         foreach ($this->simpleInput as $key => $value){
             $expected=false;
-            if ($key === 'j') $expected=null;
+            if ($key === 'j' || $key === 'l') $expected=null;
             self::assertSame($expected, $this->object->validate_satisfy_max_len($key, $this->simpleInput,null, 1), $key);
             
             if ($value===null)$value='nnn';
@@ -319,24 +391,42 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_in_list
-     * @todo   Implement testValidate_satisfy_in_list().
      */
     public function testValidate_satisfy_in_list() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $i=0;
+        foreach ($this->simpleInput as $key => $value){
+            if ($key==='c') continue;
+            self::assertSame(null, $this->object->validate_satisfy_in_list($key, $this->simpleInput, null,  $this->simpleInput), $key);
+            $i++;
+        }
+
+        self::assertSame(false, $this->object->validate_satisfy_in_list('zz', $this->simpleInput, null,  $this->simpleInput));
+        $this->simpleInput['zz']=5;
+        self::assertSame(null, $this->object->validate_satisfy_in_list('zz', $this->simpleInput, null,  $this->simpleInput));
+        //$this->object->validate_satisfy_in_list('zz', $this->simpleInput, null,  null);
+        self::assertSame(false, $this->object->validate_satisfy_in_list('zz', $this->simpleInput, null,  array()));
+        //$this->object->validate_satisfy_in_list('zz', $this->simpleInput, null,  5);
+        //$this->object->validate_satisfy_in_list('zz', $this->simpleInput, null,  '5');
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_not_in_list
-     * @todo   Implement testValidate_satisfy_not_in_list().
      */
     public function testValidate_satisfy_not_in_list() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $i=0;
+        foreach ($this->simpleInput as $key => $value){
+            if ($key==='c') continue;
+            self::assertSame(false, $this->object->validate_satisfy_not_in_list($key, $this->simpleInput, null,  $this->simpleInput), $key);
+            $i++;
+        }
+
+        self::assertSame(null, $this->object->validate_satisfy_not_in_list('zz', $this->simpleInput, null,  $this->simpleInput));
+        $this->simpleInput['zz']=5;
+        self::assertSame(false, $this->object->validate_satisfy_not_in_list('zz', $this->simpleInput, null,  $this->simpleInput));
+        //$this->object->validate_satisfy_not_in_list('zz', $this->simpleInput, null,  null);
+        self::assertSame(null, $this->object->validate_satisfy_not_in_list('zz', $this->simpleInput, null,  array()));
+        //$this->object->validate_satisfy_not_in_list('zz', $this->simpleInput, null,  5);
+        //$this->object->validate_satisfy_not_in_list('zz', $this->simpleInput, null,  '5');
     }
 
     /**
@@ -358,62 +448,126 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_exists
-     * @todo   Implement testValidate_satisfy_file_exists().
      */
     public function testValidate_satisfy_file_exists() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        if (file_exists($this->simpleFileInput['a']['tmp_name'])) unlink($this->simpleFileInput['a']['tmp_name']);
+        self::assertSame(false, $this->object->validate_satisfy_file_exists('a', $this->simpleFileInput));
+        file_put_contents($this->simpleFileInput['a']['tmp_name'], 'aaaaa');
+        self::assertSame(null, $this->object->validate_satisfy_file_exists('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['tmp_name']);
+        self::assertSame(false, $this->object->validate_satisfy_file_exists('a', $this->simpleFileInput));
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_isset
-     * @todo   Implement testValidate_satisfy_file_isset().
      */
     public function testValidate_satisfy_file_isset() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        self::assertSame(null, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['tmp_name']);
+        self::assertSame(false, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['tmp_name']='a';
+        self::assertSame(null, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['name']);
+        self::assertSame(false, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['name']='a';
+        self::assertSame(null, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['error']);
+        self::assertSame(false, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']='a';
+        self::assertSame(null, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['size']);
+        self::assertSame(false, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['size']='a';
+        self::assertSame(null, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']);
+        self::assertSame(false, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['name']='a';
+        $this->simpleFileInput['a']['size']='a';
+        $this->simpleFileInput['a']['error']='a';
+        $this->simpleFileInput['a']['tmp_name']='a';
+        self::assertSame(null, $this->object->validate_satisfy_file_isset('a', $this->simpleFileInput));
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_error
-     * @todo   Implement testValidate_satisfy_file_error().
      */
     public function testValidate_satisfy_file_error() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        self::assertSame(false, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['error']);
+        self::assertSame(null, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=1;
+        self::assertSame(null, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=3;
+        self::assertSame(null, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=4;
+        self::assertSame(false, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=5;
+        self::assertSame(null, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput));
+        
+        foreach($this->simpleInput as $key => $value){
+            $this->simpleFileInput['a']['error']=$value;
+            $expected=null;
+            if ($value===0 || $value===4)$expected=false;
+            self::assertSame($expected, $this->object->validate_satisfy_file_error('a', $this->simpleFileInput), $key);            
+        }
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_no_error
-     * @todo   Implement testValidate_satisfy_file_no_error().
      */
     public function testValidate_satisfy_file_no_error() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        self::assertSame(null, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput));
+        unset($this->simpleFileInput['a']['error']);
+        self::assertSame(false, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=1;
+        self::assertSame(false, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=3;
+        self::assertSame(false, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=4;
+        self::assertSame(null, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput));
+        $this->simpleFileInput['a']['error']=5;
+        self::assertSame(false, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput));
+        
+        foreach($this->simpleInput as $key => $value){
+            $this->simpleFileInput['a']['error']=$value;
+            $expected=false;
+            if ($value===0 || $value===4)$expected=null;
+            self::assertSame($expected, $this->object->validate_satisfy_file_no_error('a', $this->simpleFileInput), $key);            
+        }
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_extension
-     * @todo   Implement testValidate_satisfy_file_extension().
      */
     public function testValidate_satisfy_file_extension() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        // es wird eine konkrete Dateierweiterung geprüft
+        self::assertSame(null, $this->object->validate_satisfy_file_extension('a', $this->simpleFileInput,null,'txt'));
+        self::assertSame(false, $this->object->validate_satisfy_file_extension('a', $this->simpleFileInput,null,'txt2'));
+        self::assertSame(false, $this->object->validate_satisfy_file_extension('a', $this->simpleFileInput,null,'png'));
+        
+        // die Prüfung soll anhand einer Validierung erfolgen
+        // todo...
+        
+        foreach($this->simpleInput as $key => $value){
+            if (is_array($value) || $value === null) {
+                continue;
+            }
+            
+            self::assertSame(false, $this->object->validate_satisfy_file_extension('a', $this->simpleFileInput, null, $value), $key);            
+        }
+        
+        foreach($this->simpleInput as $key => $value){
+            if (is_array($value)) {
+                continue;
+            }
+            
+            $this->simpleFileInput['a']['name']='a.'.$value;
+            self::assertSame(false, $this->object->validate_satisfy_file_extension('a', $this->simpleFileInput, null, 'txt'), $key);            
+        }
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_mime
-     * @todo   Implement testValidate_satisfy_file_mime().
      */
     public function testValidate_satisfy_file_mime() {
         // Remove the following lines when you implement this test.
@@ -424,7 +578,6 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_size
-     * @todo   Implement testValidate_satisfy_file_size().
      */
     public function testValidate_satisfy_file_size() {
         // Remove the following lines when you implement this test.
@@ -435,7 +588,6 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_name
-     * @todo   Implement testValidate_satisfy_file_name().
      */
     public function testValidate_satisfy_file_name() {
         // Remove the following lines when you implement this test.
@@ -446,7 +598,6 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_name_strict
-     * @todo   Implement testValidate_satisfy_file_name_strict().
      */
     public function testValidate_satisfy_file_name_strict() {
         // Remove the following lines when you implement this test.

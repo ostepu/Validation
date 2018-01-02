@@ -324,6 +324,10 @@ class Validation
      */
     public function __construct($input=null, $settings = array())
     {
+        if (!is_array($settings)){
+            $settings=array();
+        }
+        
         if (isset($input)) {
             if (!is_array($input)){
                 $input = array($input);
