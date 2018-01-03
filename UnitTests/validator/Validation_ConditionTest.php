@@ -182,10 +182,24 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
      * @covers Validation_Condition::validate_satisfy_regex
      */
     public function testValidate_satisfy_regex() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        // es wird eine konkrete Dateierweiterung geprüft
+        self::assertSame(null, $this->object->validate_satisfy_regex('d', $this->simpleFileInput,null,'%^abc$%'));
+        self::assertSame(null, $this->object->validate_satisfy_regex('d', $this->simpleFileInput,null,'%^a%'));
+        self::assertSame(null, $this->object->validate_satisfy_regex('d', $this->simpleFileInput,null,'%^[abc]+$%'));
+        
+        foreach($this->simpleInput as $key => $value){
+            if ($value === null) {
+                continue;
+            }
+            
+            self::assertSame(false, $this->object->validate_satisfy_regex('a', $this->simpleFileInput, null, $value), $key);            
+        }
+        
+        foreach($this->simpleInput as $key => $value){
+            if (!isset($this->simpleFileInput[$key])){continue;}
+            
+            self::assertSame(false, $this->object->validate_satisfy_regex($key, $this->simpleFileInput, null, '%^ttt$%'), $key);            
+        }
     }
 
     /**
@@ -570,40 +584,130 @@ class Validation_ConditionTest extends PHPUnit_Framework_TestCase {
      * @covers Validation_Condition::validate_satisfy_file_mime
      */
     public function testValidate_satisfy_file_mime() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        if (file_exists($this->simpleFileInput['a']['tmp_name'])) unlink($this->simpleFileInput['a']['tmp_name']);
+        file_put_contents($this->simpleFileInput['a']['tmp_name'], 'aaaaa');
+        
+        // es wird eine konkrete Dateierweiterung geprüft
+        self::assertSame(null, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput,null,'text/plain'));
+        self::assertSame(false, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput,null,'application/zip'));
+        self::assertSame(false, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput,null,'text'));
+        
+        // die Prüfung soll anhand einer Validierung erfolgen
+        // todo...
+        
+        foreach($this->simpleInput as $key => $value){
+            if (is_array($value) || $value === null) {
+                continue;
+            }
+            
+            self::assertSame(false, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput, null, $value), $key);            
+        }
+        
+        foreach($this->simpleInput as $key => $value){
+            if (is_array($value)) {
+                continue;
+            }
+            
+            $this->simpleFileInput['a']['name']='a.'.$value;
+            self::assertSame(false, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput, null, 'text'), $key);            
+        }
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_size
      */
     public function testValidate_satisfy_file_size() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        
+        // es wird eine konkrete Dateiegröße geprüft
+        $this->simpleFileInput['a']['size']=0;
+        self::assertSame(false, $this->object->validate_satisfy_file_size('a', $this->simpleFileInput,null,5));
+        $this->simpleFileInput['a']['size']=5;
+        self::assertSame(null, $this->object->validate_satisfy_file_size('a', $this->simpleFileInput,null,5));
+        self::assertSame(false, $this->object->validate_satisfy_file_size('a', $this->simpleFileInput,null,8));
+        
+        // die Prüfung soll anhand einer Validierung erfolgen
+        // todo...
+        
+        foreach($this->simpleInput as $key => $value){
+            if (!is_int($value)) {
+                continue;
+            }
+            
+            self::assertSame(false, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput, null, $value), $key);            
+        }
+        
+        foreach($this->simpleInput as $key => $value){
+            if (!is_int($value)) {
+                continue;
+            }
+            
+            $this->simpleFileInput['a']['size']=$value;
+            self::assertSame(false, $this->object->validate_satisfy_file_mime('a', $this->simpleFileInput, null, 12), $key);            
+        }
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_name
      */
     public function testValidate_satisfy_file_name() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        // es wird eine konkrete Dateierweiterung geprüft
+        self::assertSame(null, $this->object->validate_satisfy_file_name('a', $this->simpleFileInput,null,'a.txt'));
+        self::assertSame(false, $this->object->validate_satisfy_file_name('a', $this->simpleFileInput,null,'a'));
+        self::assertSame(false, $this->object->validate_satisfy_file_name('a', $this->simpleFileInput,null,'txt'));
+        
+        // die Prüfung soll anhand einer Validierung erfolgen
+        // todo...
+        
+        foreach($this->simpleInput as $key => $value){
+            if (is_array($value) || $value === null) {
+                continue;
+            }
+            
+            self::assertSame(false, $this->object->validate_satisfy_file_name('a', $this->simpleFileInput, null, $value), $key);            
+        }
+        
+        foreach($this->simpleInput as $key => $value){
+            if (is_array($value)) {
+                continue;
+            }
+            
+            $this->simpleFileInput['a']['name']=$value;
+            self::assertSame(false, $this->object->validate_satisfy_file_name('a', $this->simpleFileInput, null, 'qqq'), $key);            
+        }
     }
 
     /**
      * @covers Validation_Condition::validate_satisfy_file_name_strict
      */
     public function testValidate_satisfy_file_name_strict() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        // es wird eine konkrete Dateierweiterung geprüft
+        self::assertSame(null, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput,null,'a.txt'));
+            $this->simpleFileInput['a']['name']='a3_-.4.3';
+        self::assertSame(null, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='Ä';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='$';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='%';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='(';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='/';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='&';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='=';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+            $this->simpleFileInput['a']['name']='';
+        self::assertSame(false, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput));
+
+        foreach($this->simpleInput as $key => $value){            
+            $this->simpleFileInput['a']['name']=$value;
+            $expected=false;
+            if ($key==='d' || $key===2 || $key==='l')$expected=null;
+            
+            self::assertSame($expected, $this->object->validate_satisfy_file_name_strict('a', $this->simpleFileInput, null), $key);            
+        }
     }
 
 }

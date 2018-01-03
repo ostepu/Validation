@@ -260,7 +260,7 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_regex($key, $input, $setting = null, $param = null)
     {
-        if ($setting['setError'] || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
+        if ((isset($setting['setError']) && $setting['setError']) || !isset($input[$key]) || (is_string($input[$key]) && empty($input[$key]))) {
             return;
         }
 
@@ -881,6 +881,10 @@ class Validation_Condition implements Validation_Interface
                 return false;
             }
         } else {
+            if (!is_array($setting)){
+                $setting=array();
+            }
+
             $f = new Validation(array('mime'=>$mime), $setting);
             foreach ($param as $rule) {
                 $f->addSet('mime', $rule);
@@ -912,11 +916,43 @@ class Validation_Condition implements Validation_Interface
         }
 
         if (!isset($param)) {
-            throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter (int or string).');
+            throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter (int).');
+        }
+        
+        if (!is_int($param)){
+            throw new Exception('Validation rule \''.__METHOD__.'\', param must be an integer.');
+        }
+        
+        if (!isset($input[$key]['size']) || !isset($input[$key]['tmp_name'])){
+            return false;
         }
 
-        /// ??? ///
-        throw new Exception('Validation rule \''.__METHOD__.'\' is not implemented.');
+        $file = $input[$key];
+
+        $size = $file['size'];
+
+        if (!is_array($param)) {
+            if ($size === $param) {
+                return;
+            } else {
+                return false;
+            }
+        } else {
+            if (!is_array($setting)){
+                $setting=array();
+            }
+
+            $f = new Validation(array('size'=>$size), $setting);
+            foreach ($param as $rule) {
+                $f->addSet('size', $rule);
+            }
+
+            if ($f->isValid()) {
+                return;
+            } else {
+                return false;
+            }
+        }
 
         return false;
     }
@@ -932,12 +968,12 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_file_name($key, $input, $setting = null, $param = null)
     {
-        if (!$setting['setError'] && ( !isset($input[$key]) || !isset($input[$key]['name']))) {
-            return;
-        }
-
         if ($setting['setError']) {
             return;
+        }
+        
+        if (!$setting['setError'] && ( !isset($input[$key]) || !isset($input[$key]['name']))) {
+            return false;
         }
 
         $file = $input[$key];
@@ -949,6 +985,10 @@ class Validation_Condition implements Validation_Interface
                 return false;
             }
         } else {
+            if (!is_array($setting)){
+                $setting=array();
+            }
+
             $f = new Validation(array('name'=>$file['name']), $setting);
             foreach ($param as $rule) {
                 $f->addSet('name', $rule);
@@ -975,15 +1015,19 @@ class Validation_Condition implements Validation_Interface
      */
     public static function validate_satisfy_file_name_strict($key, $input, $setting = null, $param = null)
     {
-        if (!$setting['setError'] && ( !isset($input[$key]) || !isset($input[$key]['name']))) {
-            return;
-        }
-
         if ($setting['setError']) {
             return;
         }
+        
+        if (!$setting['setError'] && ( !isset($input[$key]) || !isset($input[$key]['name']))) {
+            return false;
+        }
 
         $file = $input[$key];
+        
+        if (!is_string($file['name'])){
+            return false;
+        }
 
         if (preg_match("%^((?!\.)[a-zA-Z0-9\\.\\-_]+)$%", $file['name']) === 1) {
             return;
