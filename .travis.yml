@@ -1,9 +1,11 @@
-language: php
-
 php:
     - 5.6
 
 before_script:
   - curl -sSf -L -o phpunit https://phar.phpunit.de/phpunit-6.phar
+  - curl -sSf -L -o php-coveralls https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
 
-script: phpunit --stderr ./
+script: phpunit --configuration phpunit.xml --coverage-clover 'build/logs/clover.xml' --stderr ./
+
+after_success:
+  - php php-coveralls.phar --coverage_clover 'build/logs/clover.xml'
