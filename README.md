@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/ostepu/ostepu-validation.svg?branch=master)](https://travis-ci.org/ostepu/ostepu-validation)
+[![Coverage Status](https://coveralls.io/repos/github/ostepu/ostepu-validation/badge.svg?branch=master)](https://coveralls.io/github/ostepu/ostepu-validation?branch=master)
+
 Dieses Projekt enthält die Klasse Validation, mit der Formularübergaben anhand von Regelmengen überprüft werden können.
 
 # Verwendung
