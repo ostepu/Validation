@@ -26,7 +26,7 @@ class Validation_Set implements Validation_Interface
             return;
         }
 
-        if (!isset($param)) {
+        if (!isset($param) && !is_null($param)) {
             throw new Exception('Validation rule \''.__METHOD__.'\', missing parameter.');
         }
 
